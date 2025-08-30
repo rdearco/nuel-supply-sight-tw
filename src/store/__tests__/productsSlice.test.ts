@@ -1,14 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import productsReducer, { updateProduct, setLoading, setError } from '../productsSlice';
 import { mockProducts } from '../../data/mockData';
+import { ProductStatus } from '../../types';
 
 describe('productsSlice', () => {
   const initialState = {
     products: mockProducts,
     productsWithStatus: mockProducts.map(product => ({
       ...product,
-      status: product.stock > product.demand ? 'Healthy' : 
-              product.stock === product.demand ? 'Low' : 'Critical'
+      status: (product.stock > product.demand ? 'Healthy' : 
+              product.stock === product.demand ? 'Low' : 'Critical') as ProductStatus
     })),
     kpis: {
       totalStock: 334,

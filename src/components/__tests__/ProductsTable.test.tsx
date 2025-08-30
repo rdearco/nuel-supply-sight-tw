@@ -125,6 +125,6 @@ describe('ProductsTable', () => {
     
     expect(paginationButtons.length).toBeGreaterThanOrEqual(2);
     // Both should be disabled since we only have 2 items (fits on one page)
-    expect(paginationButtons.every(btn => btn.disabled)).toBe(true);
+    expect(paginationButtons.every(btn => (btn as HTMLButtonElement).disabled)).toBe(true);
   });
 });
