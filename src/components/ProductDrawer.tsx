@@ -29,20 +29,17 @@ const ProductDrawer: React.FC = () => {
   const {
     register: registerDemand,
     handleSubmit: handleSubmitDemand,
-    formState: { errors: demandErrors }
-  } = useForm<UpdateDemandForm>({
-    defaultValues: {
-      demand: selectedProduct?.demand || 0
-    }
-  });
+    formState: { errors: demandErrors },
+    reset: resetDemand
+  } = useForm<UpdateDemandForm>();
 
   const {
     register: registerStock,
     handleSubmit: handleSubmitStock,
-    formState: { errors: stockErrors }
+    formState: { errors: stockErrors },
+    setValue
   } = useForm<TransferStockForm>({
     defaultValues: {
-      stock: selectedProduct?.stock || 0,
       warehouse: selectedProduct?.warehouse || 'BLR-A'
     }
   });
@@ -58,17 +55,18 @@ const ProductDrawer: React.FC = () => {
         id: selectedProduct.id,
         updates: { demand: data.demand }
       }));
-      onClose();
+      resetDemand();
     }
   };
 
   const onTransferStock = (data: TransferStockForm) => {
     if (selectedProduct) {
+      const newStock = selectedProduct.stock + data.stock;
       dispatch(updateProduct({
         id: selectedProduct.id,
-        updates: { stock: data.stock, warehouse: data.warehouse }
+        updates: { stock: newStock, warehouse: data.warehouse }
       }));
-      onClose();
+      setValue('stock', undefined as any);
     }
   };
 
@@ -152,15 +150,17 @@ const ProductDrawer: React.FC = () => {
                         <h3 className="text-lg font-medium text-gray-900 mb-4">Update Demand</h3>
                         <form onSubmit={handleSubmitDemand(onUpdateDemand)} className="space-y-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="demand-input" className="block text-sm font-medium text-gray-700 mb-1">
                               New Demand
                             </label>
                             <input
+                              id="demand-input"
                               type="number"
                               min="0"
                               {...registerDemand('demand', { 
                                 required: 'Demand is required',
-                                min: { value: 0, message: 'Demand must be positive' }
+                                min: { value: 0, message: 'Demand must be positive' },
+                                valueAsNumber: true
                               })}
                               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
@@ -182,28 +182,32 @@ const ProductDrawer: React.FC = () => {
                         <h3 className="text-lg font-medium text-gray-900 mb-4">Transfer Stock</h3>
                         <form onSubmit={handleSubmitStock(onTransferStock)} className="space-y-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="stock-input" className="block text-sm font-medium text-gray-700 mb-1">
                               Stock Amount
                             </label>
                             <input
+                              id="stock-input"
                               type="number"
-                              min="0"
                               {...registerStock('stock', { 
                                 required: 'Stock is required',
-                                min: { value: 0, message: 'Stock must be positive' }
+                                valueAsNumber: true
                               })}
                               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             />
+                            <p className="mt-1 text-sm text-gray-500">
+                              Positive to add, negative to remove
+                            </p>
                             {stockErrors.stock && (
                               <p className="mt-1 text-sm text-red-600">{stockErrors.stock.message}</p>
                             )}
                           </div>
                           
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="warehouse-select" className="block text-sm font-medium text-gray-700 mb-1">
                               Target Warehouse
                             </label>
                             <select
+                              id="warehouse-select"
                               {...registerStock('warehouse', { required: 'Warehouse is required' })}
                               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             >
