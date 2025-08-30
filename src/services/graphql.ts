@@ -5,8 +5,8 @@ import { mockProducts, generateTrendData } from '../data/mockData';
 import { Product, ProductUpdateData } from '../types';
 
 // Create a fully mutable copy of mockProducts for mutations
-  // eslint-disable-next-line prefer-const
-  let products: Product[] = structuredClone(mockProducts);
+// eslint-disable-next-line prefer-const
+let products: Product[] = structuredClone(mockProducts);
 
 // GraphQL schema
 const typeDefs = gql`
