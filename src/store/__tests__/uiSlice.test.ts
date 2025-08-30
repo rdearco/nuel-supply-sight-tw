@@ -4,7 +4,8 @@ import uiReducer, {
   setFilters, 
   setSelectedProduct, 
   setDrawerOpen, 
-  setCurrentPage 
+  setCurrentPage,
+  setRowsPerPage 
 } from '../uiSlice';
 
 describe('uiSlice', () => {
@@ -18,6 +19,7 @@ describe('uiSlice', () => {
     selectedProductId: null,
     isDrawerOpen: false,
     currentPage: 1,
+    rowsPerPage: 10,
   };
 
   it('should return the initial state', () => {
@@ -94,6 +96,7 @@ describe('uiSlice', () => {
       selectedProductId: 'P-1002',
       isDrawerOpen: true,
       currentPage: 2,
+      rowsPerPage: 10,
     });
   });
 
@@ -122,5 +125,18 @@ describe('uiSlice', () => {
       const actual = uiReducer(initialState, setDateRange(dateRange));
       expect(actual.dateRange).toBe(dateRange);
     });
+  });
+
+  it('should handle setRowsPerPage', () => {
+    const actual = uiReducer(initialState, setRowsPerPage(25));
+    expect(actual.rowsPerPage).toBe(25);
+    expect(actual.currentPage).toBe(1); // Should reset to page 1
+  });
+
+  it('should reset currentPage when rowsPerPage changes', () => {
+    const stateWithDifferentPage = { ...initialState, currentPage: 3 };
+    const actual = uiReducer(stateWithDifferentPage, setRowsPerPage(50));
+    expect(actual.rowsPerPage).toBe(50);
+    expect(actual.currentPage).toBe(1);
   });
 });

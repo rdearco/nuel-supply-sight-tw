@@ -32,6 +32,86 @@ export const mockProducts: Product[] = [
     warehouse: "DEL-B",
     stock: 24,
     demand: 120
+  },
+  {
+    id: "P-1005",
+    name: "10mm Socket Screw",
+    sku: "SCK-10-250",
+    warehouse: "BLR-A",
+    stock: 95,
+    demand: 75
+  },
+  {
+    id: "P-1006",
+    name: "Flat Washer 6mm",
+    sku: "FWS-06-300",
+    warehouse: "PNQ-C",
+    stock: 200,
+    demand: 150
+  },
+  {
+    id: "P-1007",
+    name: "Spring Lock Washer",
+    sku: "SLW-08-400",
+    warehouse: "DEL-B",
+    stock: 45,
+    demand: 90
+  },
+  {
+    id: "P-1008",
+    name: "Torx Bolt T20",
+    sku: "TRX-T20-150",
+    warehouse: "BLR-A",
+    stock: 120,
+    demand: 100
+  },
+  {
+    id: "P-1009",
+    name: "Rubber Gasket 25mm",
+    sku: "GSK-25-100",
+    warehouse: "PNQ-C",
+    stock: 30,
+    demand: 60
+  },
+  {
+    id: "P-1010",
+    name: "Allen Key 4mm",
+    sku: "ALK-04-80",
+    warehouse: "DEL-B",
+    stock: 65,
+    demand: 45
+  },
+  {
+    id: "P-1011",
+    name: "Wing Nut M10",
+    sku: "WNG-10-120",
+    warehouse: "BLR-A",
+    stock: 85,
+    demand: 85
+  },
+  {
+    id: "P-1012",
+    name: "Machine Screw 8mm",
+    sku: "MSC-08-300",
+    warehouse: "PNQ-C",
+    stock: 140,
+    demand: 110
+  },
+  {
+    id: "P-1013",
+    name: "Thumb Screw M6",
+    sku: "THM-06-90",
+    warehouse: "DEL-B",
+    stock: 20,
+    demand: 70
+  },
+  {
+    id: "P-1014",
+    name: "Carriage Bolt 12mm",
+    sku: "CAR-12-200",
+    warehouse: "BLR-A",
+    stock: 160,
+    demand: 130
   }
 ];
 

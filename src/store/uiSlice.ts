@@ -7,6 +7,7 @@ interface UIState {
   selectedProductId: string | null;
   isDrawerOpen: boolean;
   currentPage: number;
+  rowsPerPage: number;
 }
 
 const initialState: UIState = {
@@ -19,6 +20,7 @@ const initialState: UIState = {
   selectedProductId: null,
   isDrawerOpen: false,
   currentPage: 1,
+  rowsPerPage: 10,
 };
 
 const uiSlice = createSlice({
@@ -41,8 +43,12 @@ const uiSlice = createSlice({
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
     },
+    setRowsPerPage: (state, action: PayloadAction<number>) => {
+      state.rowsPerPage = action.payload;
+      state.currentPage = 1; // Reset to first page when changing rows per page
+    },
   },
 });
 
-export const { setDateRange, setFilters, setSelectedProduct, setDrawerOpen, setCurrentPage } = uiSlice.actions;
+export const { setDateRange, setFilters, setSelectedProduct, setDrawerOpen, setCurrentPage, setRowsPerPage } = uiSlice.actions;
 export default uiSlice.reducer;

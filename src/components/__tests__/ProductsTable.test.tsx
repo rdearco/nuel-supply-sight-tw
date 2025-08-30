@@ -33,7 +33,8 @@ describe('ProductsTable', () => {
         warehouse: 'All Warehouses',
         status: 'All Status'
       },
-      currentPage: 1
+      currentPage: 1,
+      rowsPerPage: 10
     }
   };
 
@@ -123,8 +124,10 @@ describe('ProductsTable', () => {
     const buttons = screen.getAllByRole('button');
     const paginationButtons = buttons.filter(btn => btn.querySelector('svg'));
     
-    expect(paginationButtons.length).toBeGreaterThanOrEqual(2);
-    // Both should be disabled since we only have 2 items (fits on one page)
-    expect(paginationButtons.every(btn => (btn as HTMLButtonElement).disabled)).toBe(true);
+    expect(paginationButtons.length).toBe(2);
+    // First button (previous) should be disabled since we're on page 1
+    // Second button (next) should be disabled since we only have 2 items (fits on one page)
+    expect(paginationButtons[0]).toBeDisabled(); // Previous button
+    expect(paginationButtons[1]).toBeDisabled(); // Next button
   });
 });

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { RootState } from '../store';
-import { setSelectedProduct, setDrawerOpen, setCurrentPage } from '../store/uiSlice';
+import { setSelectedProduct, setDrawerOpen, setCurrentPage, setRowsPerPage } from '../store/uiSlice';
 import { ProductWithStatus } from '../types';
 import { getStatusBadge } from './common/util';
 import clsx from 'clsx';
@@ -10,9 +10,7 @@ import clsx from 'clsx';
 const ProductsTable: React.FC = () => {
   const dispatch = useDispatch();
   const { productsWithStatus } = useSelector((state: RootState) => state.products);
-  const { filters, currentPage } = useSelector((state: RootState) => state.ui);
-
-  const rowsPerPage = 10;
+  const { filters, currentPage, rowsPerPage } = useSelector((state: RootState) => state.ui);
 
   const filteredProducts = useMemo(() => {
     return productsWithStatus.filter((product) => {
@@ -44,6 +42,9 @@ const ProductsTable: React.FC = () => {
     dispatch(setCurrentPage(page));
   };
 
+  const handleRowsPerPageChange = (rows: number) => {
+    dispatch(setRowsPerPage(rows));
+  };
 
   const getRowClasses = (status: string) => {
     return clsx(
@@ -116,10 +117,17 @@ const ProductsTable: React.FC = () => {
 
       {/* Pagination */}
       <div className="px-6 py-3 flex items-center justify-between border-t border-gray-200 bg-white">
-        <div className="flex items-center">
-          <span className="text-sm text-gray-700">
-            Rows per page: <span className="font-medium">10</span>
-          </span>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-gray-700">Rows per page:</span>
+          <select
+            value={rowsPerPage}
+            onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
+            className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+          </select>
         </div>
         
         <div className="flex items-center space-x-2">
