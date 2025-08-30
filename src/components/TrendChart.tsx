@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { RootState } from '../store';
-import { generateTrendData } from '../data/mockData';
+import { TrendData } from '../types';
 
 const TrendChart: React.FC = () => {
   const dateRange = useSelector((state: RootState) => state.ui.dateRange);
+  const { kpis } = useSelector((state: RootState) => state.products);
   
   const days = dateRange === '7d' ? 7 : dateRange === '14d' ? 14 : 30;
-  const data = generateTrendData(days);
+  
+  // Generate trend data with today's date and current totals
+  const data = useMemo(() => {
+    const trendData: TrendData[] = [];
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - days + 1);
+
+    for (let i = 0; i < days; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      
+      const isToday = i === days - 1;
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      trendData.push({
+        date: `${monthNames[date.getMonth()]} ${date.getDate()}`,
+        // For historical days, use simulated data around current totals
+        // For today, use actual current totals
+        stock: isToday ? kpis.totalStock : kpis.totalStock + Math.random() * 40 - 20,
+        demand: isToday ? kpis.totalDemand : kpis.totalDemand + Math.random() * 30 - 15
+      });
+    }
+
+    return trendData;
+  }, [days, kpis.totalStock, kpis.totalDemand]);
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 mb-8 shadow-sm">
@@ -28,7 +55,7 @@ const TrendChart: React.FC = () => {
               axisLine={false}
               tickLine={false}
               tick={{ fontSize: 12, fill: '#6b7280' }}
-              domain={[300, 450]}
+              domain={['dataMin - 50', 'dataMax + 50']}
             />
             <Tooltip 
               contentStyle={{ 

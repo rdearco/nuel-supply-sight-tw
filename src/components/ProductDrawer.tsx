@@ -7,13 +7,14 @@ import { RootState } from '../store';
 import { setDrawerOpen, setSelectedProduct } from '../store/uiSlice';
 import { updateProduct } from '../store/productsSlice';
 import { warehouses } from '../data/mockData';
+import { getStatusBadge } from './common/util';
 
 interface UpdateDemandForm {
   demand: number;
 }
 
 interface TransferStockForm {
-  stock: number;
+  stock?: number;
   warehouse: string;
 }
 
@@ -26,23 +27,34 @@ const ProductDrawer: React.FC = () => {
     ? productsWithStatus.find(p => p.id === selectedProductId) 
     : null;
 
+
   const {
     register: registerDemand,
     handleSubmit: handleSubmitDemand,
     formState: { errors: demandErrors },
-    reset: resetDemand
+    reset: resetDemand,
+    watch: watchDemand
   } = useForm<UpdateDemandForm>();
 
   const {
     register: registerStock,
     handleSubmit: handleSubmitStock,
     formState: { errors: stockErrors },
-    setValue
+    setValue,
+    watch: watchStock
   } = useForm<TransferStockForm>({
     defaultValues: {
       warehouse: selectedProduct?.warehouse || 'BLR-A'
     }
   });
+
+  // Watch form values to enable/disable buttons
+  const demandValue = watchDemand('demand');
+  const stockValue = watchStock('stock');
+
+  // Determine if buttons should be disabled
+  const isDemandButtonDisabled = demandValue == null || demandValue === 0 || isNaN(demandValue);
+  const isStockButtonDisabled = stockValue == null || stockValue === 0 || isNaN(stockValue);
 
   const onClose = () => {
     dispatch(setDrawerOpen(false));
@@ -60,13 +72,13 @@ const ProductDrawer: React.FC = () => {
   };
 
   const onTransferStock = (data: TransferStockForm) => {
-    if (selectedProduct) {
+    if (selectedProduct && data.stock !== undefined) {
       const newStock = selectedProduct.stock + data.stock;
       dispatch(updateProduct({
         id: selectedProduct.id,
         updates: { stock: newStock, warehouse: data.warehouse }
       }));
-      setValue('stock', undefined as any);
+      setValue('stock', undefined);
     }
   };
 
@@ -142,6 +154,14 @@ const ProductDrawer: React.FC = () => {
                             <dt className="text-sm font-medium text-gray-500">Current Demand</dt>
                             <dd className="text-sm text-gray-900">{selectedProduct.demand}</dd>
                           </div>
+                          <div>
+                            <dt className="text-sm font-medium text-gray-500">Status</dt>
+                            <dd className="mt-1">
+                              <span className={getStatusBadge(selectedProduct.status)}>
+                                {selectedProduct.status}
+                              </span>
+                            </dd>
+                          </div>
                         </dl>
                       </div>
 
@@ -157,6 +177,7 @@ const ProductDrawer: React.FC = () => {
                               id="demand-input"
                               type="number"
                               min="0"
+                              placeholder="New Demand"
                               {...registerDemand('demand', { 
                                 required: 'Demand is required',
                                 min: { value: 0, message: 'Demand must be positive' },
@@ -170,7 +191,12 @@ const ProductDrawer: React.FC = () => {
                           </div>
                           <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                            disabled={isDemandButtonDisabled}
+                            className={`w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                              isDemandButtonDisabled
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+                            }`}
                           >
                             Update Demand
                           </button>
@@ -188,6 +214,7 @@ const ProductDrawer: React.FC = () => {
                             <input
                               id="stock-input"
                               type="number"
+                              placeholder="Amount"
                               {...registerStock('stock', { 
                                 required: 'Stock is required',
                                 valueAsNumber: true
@@ -224,7 +251,12 @@ const ProductDrawer: React.FC = () => {
                           
                           <button
                             type="submit"
-                            className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            disabled={isStockButtonDisabled}
+                            className={`w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                              isStockButtonDisabled
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
+                            }`}
                           >
                             Transfer Stock
                           </button>

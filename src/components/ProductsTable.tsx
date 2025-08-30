@@ -4,6 +4,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { RootState } from '../store';
 import { setSelectedProduct, setDrawerOpen, setCurrentPage } from '../store/uiSlice';
 import { ProductWithStatus } from '../types';
+import { getStatusBadge } from './common/util';
 import clsx from 'clsx';
 
 const ProductsTable: React.FC = () => {
@@ -43,20 +44,6 @@ const ProductsTable: React.FC = () => {
     dispatch(setCurrentPage(page));
   };
 
-  const getStatusBadge = (status: string) => {
-    const baseClasses = 'inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-semibold w-20';
-    
-    switch (status) {
-      case 'Healthy':
-        return `${baseClasses} bg-green-500 text-white`;
-      case 'Low':
-        return `${baseClasses} bg-yellow-500 text-white`;
-      case 'Critical':
-        return `${baseClasses} bg-red-500 text-white`;
-      default:
-        return `${baseClasses} bg-gray-500 text-white`;
-    }
-  };
 
   const getRowClasses = (status: string) => {
     return clsx(
@@ -117,7 +104,7 @@ const ProductsTable: React.FC = () => {
                 <td className="px-6 py-4 text-sm text-gray-900">{product.stock}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.demand}</td>
                 <td className="px-6 py-4">
-                  <span className={getStatusBadge(product.status)}>
+                  <span className={getStatusBadge(product.status, true)}>
                     {product.status}
                   </span>
                 </td>
