@@ -1,0 +1,9 @@
+import '@testing-library/jest-dom';
+
+// Mock ResizeObserver for tests
+global.ResizeObserver = class ResizeObserver {
+  constructor(callback: ResizeObserverCallback) {}
+  observe(target: Element, options?: ResizeObserverOptions): void {}
+  unobserve(target: Element): void {}
+  disconnect(): void {}
+};
