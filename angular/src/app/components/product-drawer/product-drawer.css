@@ -1,0 +1,6 @@
+/* ProductDrawer styles - using Tailwind CSS classes in template */
+
+/* Custom animation for drawer slide-in */
+:host {
+  transition: transform 300ms ease-out;
+}

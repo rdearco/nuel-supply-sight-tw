@@ -1,0 +1,30 @@
+<nav class="bg-white shadow-sm border-b border-gray-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <h1 class="text-xl font-semibold text-blue-600">SupplySight</h1>
+      </div>
+      <div class="flex items-center space-x-4" *ngIf="dateRange$ | async as dateRange">
+        <span class="text-sm text-gray-500">Date Range</span>
+        <button 
+          (click)="selectDays(7)"
+          [class]="isSelected(7, dateRange) ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'"
+          class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          7 DAYS
+        </button>
+        <button 
+          (click)="selectDays(14)"
+          [class]="isSelected(14, dateRange) ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'"
+          class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          14 DAYS
+        </button>
+        <button 
+          (click)="selectDays(30)"
+          [class]="isSelected(30, dateRange) ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-blue-600 hover:bg-blue-50'"
+          class="px-4 py-2 rounded-md text-sm font-medium transition-colors">
+          30 DAYS
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
