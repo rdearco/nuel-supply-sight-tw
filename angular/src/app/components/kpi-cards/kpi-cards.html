@@ -1,0 +1,28 @@
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <div class="flex items-center">
+      <div class="flex-1">
+        <p class="text-sm font-medium text-gray-600">Total Stock</p>
+        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.totalStock | number }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <div class="flex items-center">
+      <div class="flex-1">
+        <p class="text-sm font-medium text-gray-600">Total Demand</p>
+        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.totalDemand | number }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+    <div class="flex items-center">
+      <div class="flex-1">
+        <p class="text-sm font-medium text-gray-600">Fill Rate</p>
+        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.fillRate }}%</p>
+      </div>
+    </div>
+  </div>
+</div>
