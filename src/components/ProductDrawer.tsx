@@ -148,11 +148,11 @@ const ProductDrawer: React.FC = () => {
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500">Current Stock</dt>
-                            <dd className="text-sm text-gray-900">{selectedProduct.stock}</dd>
+                            <dd className="text-sm text-gray-900">{selectedProduct.stock.toLocaleString()}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500">Current Demand</dt>
-                            <dd className="text-sm text-gray-900">{selectedProduct.demand}</dd>
+                            <dd className="text-sm text-gray-900">{selectedProduct.demand.toLocaleString()}</dd>
                           </div>
                           <div>
                             <dt className="text-sm font-medium text-gray-500">Status</dt>

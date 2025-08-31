@@ -102,8 +102,8 @@ const ProductsTable: React.FC = () => {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.sku}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{product.warehouse}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">{product.stock}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">{product.demand}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{product.stock.toLocaleString()}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{product.demand.toLocaleString()}</td>
                 <td className="px-6 py-4">
                   <span className={getStatusBadge(product.status, true)}>
                     {product.status}

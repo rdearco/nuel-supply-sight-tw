@@ -65,7 +65,7 @@ const TrendChart: React.FC = () => {
                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
               }}
               labelStyle={{ color: '#374151', fontWeight: '500' }}
-              formatter={(value: number, name: string) => [Math.round(value), name]}
+              formatter={(value: number, name: string) => [Math.round(value).toLocaleString(), name]}
             />
             <Legend 
               wrapperStyle={{ paddingTop: '20px' }}
