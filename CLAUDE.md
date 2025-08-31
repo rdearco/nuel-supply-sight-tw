@@ -118,3 +118,11 @@ src/
 - **Type Safety**: Fixed TypeScript issues and improved type definitions
 - **Test Coverage**: Updated all test suites to work with new features and Redux state
 - **Chart Integration**: Connected TrendChart to Redux store with real-time updates
+
+## Screenshots
+
+### Main Dashboard
+![Dashboard Overview](mocks/home.png)
+
+### Product Detail Drawer
+![Product Drawer](mocks/home-drawer.png)

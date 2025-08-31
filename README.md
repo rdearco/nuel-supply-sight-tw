@@ -72,6 +72,14 @@ This project demonstrates the potential of AI-assisted development for:
 
 *The collaboration between human oversight and AI capabilities resulted in a production-ready application with modern architecture, comprehensive testing, and detailed documentation.*
 
+## Screenshots
+
+### Main Dashboard
+![Dashboard Overview](mocks/home.png)
+
+### Product Detail Drawer
+![Product Drawer](mocks/home-drawer.png)
+
 ## Getting Started
 
 ### Prerequisites
