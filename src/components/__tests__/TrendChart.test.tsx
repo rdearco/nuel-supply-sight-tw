@@ -17,8 +17,19 @@ vi.mock('recharts', () => ({
 
 describe('TrendChart', () => {
   const mockState = {
+    products: {
+      products: [
+        { id: '1', stock: 100, demand: 120 }
+      ],
+      productsWithStatus: [],
+      kpis: { totalStock: 100, totalDemand: 120, fillRate: 83.3 },
+      loading: false,
+      error: null
+    },
     ui: {
-      dateRange: '7d'
+      dateRange: '7d' as const,
+      selectedProduct: null,
+      isDrawerOpen: false
     }
   };
 
@@ -55,8 +66,19 @@ describe('TrendChart', () => {
 
   it('responds to different date ranges', () => {
     const fourteenDayState = {
+      products: {
+        products: [
+          { id: '1', stock: 100, demand: 120 }
+        ],
+        productsWithStatus: [],
+        kpis: { totalStock: 100, totalDemand: 120, fillRate: 83.3 },
+        loading: false,
+        error: null
+      },
       ui: {
-        dateRange: '14d'
+        dateRange: '14d' as const,
+        selectedProduct: null,
+        isDrawerOpen: false
       }
     };
     

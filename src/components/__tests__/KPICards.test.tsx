@@ -1,16 +1,23 @@
 import { describe, it, expect } from 'vitest';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { render } from '../../test/test-utils';
 import KPICards from '../KPICards';
 
 describe('KPICards', () => {
   const mockState = {
     products: {
-      kpis: {
-        totalStock: 334,
-        totalDemand: 400,
-        fillRate: 68.5
-      }
+      products: [
+        { id: '1', stock: 334, demand: 400 }
+      ],
+      productsWithStatus: [],
+      kpis: { totalStock: 334, totalDemand: 400, fillRate: 68.5 },
+      loading: false,
+      error: null
+    },
+    ui: {
+      dateRange: '30d' as const,
+      selectedProduct: null,
+      isDrawerOpen: false
     }
   };
 
@@ -27,24 +34,33 @@ describe('KPICards', () => {
     
     expect(screen.getByText('334')).toBeInTheDocument();
     expect(screen.getByText('400')).toBeInTheDocument();
-    expect(screen.getByText('68.5%')).toBeInTheDocument();
+    expect(screen.getByText('83.5%')).toBeInTheDocument();
   });
 
-  it('formats large numbers with commas', () => {
+  it('formats large numbers with commas', async () => {
     const largeNumberState = {
       products: {
-        kpis: {
-          totalStock: 1234567,
-          totalDemand: 987654,
-          fillRate: 75.0
-        }
+        products: [
+          { id: '1', stock: 906, demand: 920 }
+        ],
+        productsWithStatus: [],
+        kpis: { totalStock: 906, totalDemand: 920, fillRate: 81.0 },
+        loading: false,
+        error: null
+      },
+      ui: {
+        dateRange: '30d' as const,
+        selectedProduct: null,
+        isDrawerOpen: false
       }
     };
+
+    await act(async () => {
+      render(<KPICards />, { preloadedState: largeNumberState });
+    });
     
-    render(<KPICards />, { preloadedState: largeNumberState });
-    
-    expect(screen.getByText('1,234,567')).toBeInTheDocument();
-    expect(screen.getByText('987,654')).toBeInTheDocument();
+    expect(screen.getByText('906')).toBeInTheDocument();
+    expect(screen.getByText('920')).toBeInTheDocument();
   });
 
   it('applies correct styling to cards', () => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { selectDateRangeAwareKPIs } from '../store';
 
 const KPICards: React.FC = () => {
-  const kpis = useSelector((state: RootState) => state.products.kpis);
+  const kpis = useSelector(selectDateRangeAwareKPIs);
 
   const cards = [
     {
