@@ -27,12 +27,21 @@ export interface KPIData {
   fillRate: number;
 }
 
+export type DateRange = '7d' | '14d' | '30d';
+
+export interface TrendDataPoint {
+  date: string;
+  stock: number;
+  demand: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
   private isLoadingSignal = signal<boolean>(true);
   private isUpdatingSignal = signal<boolean>(false);
+  private dateRangeSignal = signal<DateRange>('7d');
   
   private productsSignal = signal<Product[]>([
     {
@@ -153,6 +162,7 @@ export class ProductsService {
   readonly isLoading = this.isLoadingSignal.asReadonly();
   readonly isUpdating = this.isUpdatingSignal.asReadonly();
   readonly products = this.productsSignal.asReadonly();
+  readonly dateRange = this.dateRangeSignal.asReadonly();
   
   readonly productsWithStatus = computed<ProductWithStatus[]>(() => {
     return this.productsSignal().map(product => ({
@@ -163,8 +173,14 @@ export class ProductsService {
 
   readonly kpiData = computed<KPIData>(() => {
     const products = this.productsSignal();
-    const totalStock = products.reduce((sum, product) => sum + product.stock, 0);
-    const totalDemand = products.reduce((sum, product) => sum + product.demand, 0);
+    const dateRange = this.dateRangeSignal();
+    
+    // For now, we'll simulate date-range aware KPIs by applying a multiplier
+    // In a real application, you'd filter actual historical data
+    const multiplier = this.getDateRangeMultiplier(dateRange);
+    
+    const totalStock = Math.round(products.reduce((sum, product) => sum + product.stock, 0) * multiplier);
+    const totalDemand = Math.round(products.reduce((sum, product) => sum + product.demand, 0) * multiplier);
     const fillRate = totalDemand > 0 ? Math.round((totalStock / totalDemand) * 100) : 0;
     
     return {
@@ -172,6 +188,14 @@ export class ProductsService {
       totalDemand,
       fillRate
     };
+  });
+
+  readonly trendData = computed<TrendDataPoint[]>(() => {
+    const dateRange = this.dateRangeSignal();
+    const kpis = this.kpiData();
+    const days = this.getDaysFromRange(dateRange);
+    
+    return this.generateTrendData(days, kpis);
   });
 
   constructor() {
@@ -222,5 +246,54 @@ export class ProductsService {
 
   getProductById(id: string): ProductWithStatus | undefined {
     return this.productsWithStatus().find(product => product.id === id);
+  }
+
+  setDateRange(dateRange: DateRange): void {
+    this.dateRangeSignal.set(dateRange);
+  }
+
+  private getDateRangeMultiplier(dateRange: DateRange): number {
+    // Simulate different data volumes for different date ranges
+    switch (dateRange) {
+      case '7d': return 0.7;
+      case '14d': return 0.85;
+      case '30d': return 1.0;
+      default: return 1.0;
+    }
+  }
+
+  private getDaysFromRange(dateRange: DateRange): number {
+    switch (dateRange) {
+      case '7d': return 7;
+      case '14d': return 14;
+      case '30d': return 30;
+      default: return 7;
+    }
+  }
+
+  private generateTrendData(days: number, kpis: KPIData): TrendDataPoint[] {
+    const data: TrendDataPoint[] = [];
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - days + 1);
+
+    for (let i = 0; i < days; i++) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      
+      const isToday = i === days - 1;
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      data.push({
+        date: `${monthNames[date.getMonth()]} ${date.getDate()}`,
+        // For historical days, use simulated data around current totals
+        // For today, use actual current totals
+        stock: isToday ? kpis.totalStock : kpis.totalStock + Math.random() * 40 - 20,
+        demand: isToday ? kpis.totalDemand : kpis.totalDemand + Math.random() * 30 - 15
+      });
+    }
+
+    return data;
   }
 }

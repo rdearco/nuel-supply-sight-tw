@@ -4,13 +4,9 @@ import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { ProductsService, KPIData } from '../../services/products.service';
+import { ProductsService, TrendDataPoint } from '../../services/products.service';
 
-interface TrendData {
-  date: string;
-  stock: number;
-  demand: number;
-}
+// Remove local interface since we're using the one from ProductsService
 
 @Component({
   selector: 'app-trend-chart',
@@ -125,13 +121,13 @@ export class TrendChart implements OnInit, OnDestroy {
   public lineChartType = 'line' as const;
 
   constructor() {
-    // Use effect to reactively update chart when KPI data changes
+    // Use effect to reactively update chart when trend data changes
     effect(() => {
-      const kpiData = this.productsService.kpiData();
+      const trendData = this.productsService.trendData();
       const isLoading = this.productsService.isLoading();
       
-      if (!isLoading && kpiData) {
-        this.updateChartData('7d', kpiData);
+      if (!isLoading && trendData && trendData.length > 0) {
+        this.updateChartWithTrendData(trendData);
       }
     });
   }
@@ -145,10 +141,7 @@ export class TrendChart implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private updateChartData(dateRange: '7d' | '14d' | '30d', kpis: KPIData): void {
-    const days = dateRange === '7d' ? 7 : dateRange === '14d' ? 14 : 30;
-    const trendData = this.generateTrendData(days, kpis);
-
+  private updateChartWithTrendData(trendData: TrendDataPoint[]): void {
     // Create new data object to trigger change detection
     this.lineChartData = {
       labels: trendData.map(item => item.date),
@@ -164,32 +157,6 @@ export class TrendChart implements OnInit, OnDestroy {
       ]
     };
     
-    console.log(`Updated chart for ${days} days with ${trendData.length} data points`);
-  }
-
-  private generateTrendData(days: number, kpis: KPIData): TrendData[] {
-    const data: TrendData[] = [];
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(endDate.getDate() - days + 1);
-
-    for (let i = 0; i < days; i++) {
-      const date = new Date(startDate);
-      date.setDate(date.getDate() + i);
-      
-      const isToday = i === days - 1;
-      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      
-      data.push({
-        date: `${monthNames[date.getMonth()]} ${date.getDate()}`,
-        // For historical days, use simulated data around current totals
-        // For today, use actual current totals
-        stock: isToday ? kpis.totalStock : kpis.totalStock + Math.random() * 40 - 20,
-        demand: isToday ? kpis.totalDemand : kpis.totalDemand + Math.random() * 30 - 15
-      });
-    }
-
-    return data;
+    console.log(`Updated chart with ${trendData.length} data points`);
   }
 }
