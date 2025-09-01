@@ -15,7 +15,7 @@ export class ProductsTable {
   
   // Pagination state
   protected currentPage = signal(1);
-  protected rowsPerPage = signal(10);
+  protected rowsPerPage = signal(10); // Default to 10 products per page
   
   // All products from service
   protected allProducts = this.productsService.productsWithStatus;
