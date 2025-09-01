@@ -1,9 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AppState } from '../../store/app.state';
-import { KPIs } from '../../models/product.model';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
   selector: 'app-kpi-cards',
@@ -11,12 +8,9 @@ import { KPIs } from '../../models/product.model';
   templateUrl: './kpi-cards.html',
   styleUrl: './kpi-cards.css'
 })
-export class KpiCards implements OnInit {
-  kpis$: Observable<KPIs>;
-
-  constructor(private store: Store<AppState>) {
-    this.kpis$ = this.store.select(state => state.products.kpis);
-  }
-
-  ngOnInit(): void {}
+export class KpiCards {
+  private productsService = inject(ProductsService);
+  
+  protected kpiData = this.productsService.kpiData;
+  protected isLoading = this.productsService.isLoading;
 }

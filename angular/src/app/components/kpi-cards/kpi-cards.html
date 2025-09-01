@@ -1,28 +1,43 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-    <div class="flex items-center">
-      <div class="flex-1">
-        <p class="text-sm font-medium text-gray-600">Total Stock</p>
-        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.totalStock | number }}</p>
+@if (isLoading()) {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    @for (placeholder of [1, 2, 3]; track placeholder) {
+      <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+        <div class="flex items-center">
+          <div class="flex-1">
+            <div class="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+            <div class="h-8 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Total Stock</p>
+          <p class="text-2xl font-bold text-gray-900">{{ kpiData().totalStock | number }}</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-    <div class="flex items-center">
-      <div class="flex-1">
-        <p class="text-sm font-medium text-gray-600">Total Demand</p>
-        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.totalDemand | number }}</p>
+    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Total Demand</p>
+          <p class="text-2xl font-bold text-gray-900">{{ kpiData().totalDemand | number }}</p>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-    <div class="flex items-center">
-      <div class="flex-1">
-        <p class="text-sm font-medium text-gray-600">Fill Rate</p>
-        <p class="text-2xl font-bold text-gray-900">{{ (kpis$ | async)?.fillRate }}%</p>
+    <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+      <div class="flex items-center">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600">Fill Rate</p>
+          <p class="text-2xl font-bold text-gray-900">{{ kpiData().fillRate }}%</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

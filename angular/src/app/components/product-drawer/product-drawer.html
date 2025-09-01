@@ -77,8 +77,9 @@
                   min="0"
                   placeholder="New Demand"
                   [value]="demandForm().demand || ''"
+                  [disabled]="isUpdating() || isSubmittingDemand()"
                   (input)="updateDemandValue($any($event.target).value)"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
               </div>
               <button
@@ -88,9 +89,17 @@
                   'bg-gray-300 text-gray-500 cursor-not-allowed': isDemandButtonDisabled(),
                   'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500': !isDemandButtonDisabled()
                 }"
-                class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+                class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center"
               >
-                Update Demand
+                @if (isSubmittingDemand()) {
+                  <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Updating...
+                } @else {
+                  Update Demand
+                }
               </button>
             </form>
           </div>
@@ -108,8 +117,9 @@
                   type="number"
                   placeholder="Amount"
                   [value]="stockForm().stock || ''"
+                  [disabled]="isUpdating() || isSubmittingStock()"
                   (input)="updateStockValue($any($event.target).value)"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 <p class="mt-1 text-sm text-gray-500">
                   Positive to add, negative to remove
@@ -123,8 +133,9 @@
                 <select
                   id="warehouse-select"
                   [value]="stockForm().warehouse"
+                  [disabled]="isUpdating() || isSubmittingStock()"
                   (change)="updateWarehouse($any($event.target).value)"
-                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 >
                   @for (warehouse of warehouses; track warehouse) {
                     <option [value]="warehouse">{{ warehouse }}</option>
@@ -139,9 +150,17 @@
                   'bg-gray-300 text-gray-500 cursor-not-allowed': isStockButtonDisabled(),
                   'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500': !isStockButtonDisabled()
                 }"
-                class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+                class="w-full px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 flex items-center justify-center"
               >
-                Transfer Stock
+                @if (isSubmittingStock()) {
+                  <svg class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Transferring...
+                } @else {
+                  Transfer Stock
+                }
               </button>
             </form>
           </div>

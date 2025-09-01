@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { Subject, combineLatest } from 'rxjs';
+import { Component, OnInit, OnDestroy, inject, effect } from '@angular/core';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { AppState } from '../../store/app.state';
-import { KPIs } from '../../models/product.model';
+import { ProductsService, KPIData } from '../../services/products.service';
 
 interface TrendData {
   date: string;
@@ -22,6 +20,7 @@ interface TrendData {
 })
 export class TrendChart implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+  private productsService = inject(ProductsService);
 
   public lineChartData: ChartConfiguration<'line'>['data'] = {
     labels: [],
@@ -125,19 +124,20 @@ export class TrendChart implements OnInit, OnDestroy {
 
   public lineChartType = 'line' as const;
 
-  constructor(private store: Store<AppState>) {}
+  constructor() {
+    // Use effect to reactively update chart when KPI data changes
+    effect(() => {
+      const kpiData = this.productsService.kpiData();
+      const isLoading = this.productsService.isLoading();
+      
+      if (!isLoading && kpiData) {
+        this.updateChartData('7d', kpiData);
+      }
+    });
+  }
 
   ngOnInit(): void {
-    // Subscribe to dateRange and KPIs changes
-    combineLatest([
-      this.store.select(state => state.ui.dateRange),
-      this.store.select(state => state.products.kpis)
-    ]).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(([dateRange, kpis]) => {
-      console.log(`Chart component received state update: dateRange=${dateRange}, totalStock=${kpis.totalStock}`);
-      this.updateChartData(dateRange, kpis);
-    });
+    // Initial setup can be done here if needed
   }
 
   ngOnDestroy(): void {
@@ -145,7 +145,7 @@ export class TrendChart implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private updateChartData(dateRange: '7d' | '14d' | '30d', kpis: KPIs): void {
+  private updateChartData(dateRange: '7d' | '14d' | '30d', kpis: KPIData): void {
     const days = dateRange === '7d' ? 7 : dateRange === '14d' ? 14 : 30;
     const trendData = this.generateTrendData(days, kpis);
 
@@ -167,7 +167,7 @@ export class TrendChart implements OnInit, OnDestroy {
     console.log(`Updated chart for ${days} days with ${trendData.length} data points`);
   }
 
-  private generateTrendData(days: number, kpis: KPIs): TrendData[] {
+  private generateTrendData(days: number, kpis: KPIData): TrendData[] {
     const data: TrendData[] = [];
     const endDate = new Date();
     const startDate = new Date();

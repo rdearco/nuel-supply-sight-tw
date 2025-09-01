@@ -2,8 +2,9 @@ import { Component, signal } from '@angular/core';
 import { KpiCards } from './components/kpi-cards/kpi-cards';
 import { TrendChart } from './components/trend-chart/trend-chart';
 import { TopBar } from './components/top-bar/top-bar';
-import { ProductsTable, ProductWithStatus } from './components/products-table/products-table';
+import { ProductsTable } from './components/products-table/products-table';
 import { ProductDrawer } from './components/product-drawer/product-drawer';
+import { ProductWithStatus } from './services/products.service';
 
 @Component({
   selector: 'app-root',
@@ -13,16 +14,16 @@ import { ProductDrawer } from './components/product-drawer/product-drawer';
 })
 export class App {
   protected readonly title = signal('supply-sight-dashboard');
-  protected selectedProduct = signal<ProductWithStatus | null>(null);
+  protected selectedProductId = signal<string | null>(null);
   protected isDrawerOpen = signal(false);
 
   protected onProductClicked(product: ProductWithStatus): void {
-    this.selectedProduct.set(product);
+    this.selectedProductId.set(product.id);
     this.isDrawerOpen.set(true);
   }
 
   protected onDrawerClosed(): void {
     this.isDrawerOpen.set(false);
-    this.selectedProduct.set(null);
+    this.selectedProductId.set(null);
   }
 }
