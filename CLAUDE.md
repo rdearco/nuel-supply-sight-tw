@@ -4,15 +4,17 @@ This file contains project-specific settings and commands for Claude Code.
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript
-- **State Management**: Redux Toolkit
-- **UI Components**: Headless UI, React Hook Form
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Heroicons
-- **Build Tool**: Vite
-- **Testing**: Vitest + Testing Library
-- **GraphQL**: Mock server with executable schema
+- **Frontend**: React 18.3.1, TypeScript 5.5.3
+- **Routing**: React Router DOM 6.26.1
+- **State Management**: Redux Toolkit 2.2.7, React Redux 9.1.2
+- **UI Components**: Headless UI 2.1.2, React Hook Form 7.52.2
+- **Styling**: Tailwind CSS 3.4.10, clsx 2.1.1
+- **Charts**: Recharts 2.12.7
+- **Icons**: Heroicons 2.1.5
+- **GraphQL**: Apollo Client 3.11.4, GraphQL 16.9.0, GraphQL Tools Schema 10.0.6
+- **Build Tool**: Vite 5.4.1
+- **Testing**: Vitest 2.0.5, Testing Library (React 16.0.0, Jest DOM 6.4.8, User Event 14.5.2), jsdom 25.0.0
+- **Development**: ESLint 9.9.0, TypeScript ESLint 8.0.1, PostCSS 8.4.41, Autoprefixer 10.4.20
 
 ## Prerequisites
 
@@ -56,6 +58,12 @@ npm run typecheck
 src/
 ├── components/          # React components
 │   ├── __tests__/      # Component tests
+│   │   ├── Filters.test.tsx
+│   │   ├── KPICards.test.tsx
+│   │   ├── ProductDrawer.test.tsx
+│   │   ├── ProductsTable.test.tsx
+│   │   ├── TopBar.test.tsx
+│   │   └── TrendChart.test.tsx
 │   ├── common/         # Shared utilities
 │   │   └── util.ts     # Common functions (status badges, etc.)
 │   ├── Filters.tsx     # Search and filter controls
@@ -65,11 +73,24 @@ src/
 │   ├── TopBar.tsx      # Navigation header
 │   └── TrendChart.tsx  # Stock vs demand chart
 ├── data/               # Mock data and generators
-├── hooks/              # Custom React hooks
+│   └── mockData.ts     # Product mock data
+├── hooks/              # Custom React hooks (empty)
 ├── services/           # API service layer
+│   ├── __tests__/      # Service tests
+│   │   └── graphql.test.ts
+│   └── graphql.ts      # GraphQL client and schema
 ├── store/              # Redux store and slices
+│   ├── __tests__/      # Store tests
+│   │   ├── productsSlice.test.ts
+│   │   └── uiSlice.test.ts
+│   ├── index.ts        # Store configuration and selectors
+│   ├── productsSlice.ts # Product state management
+│   └── uiSlice.ts      # UI state management
 ├── test/               # Test utilities and setup
+│   ├── setup.ts        # Test environment setup
+│   └── test-utils.tsx  # Redux-aware test utilities
 ├── types/              # TypeScript definitions
+│   └── index.ts        # Type definitions
 ├── App.tsx             # Root component
 └── main.tsx           # Application entry point
 ```
